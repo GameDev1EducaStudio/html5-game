@@ -4,6 +4,28 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Aljabar</title>
+
+        <script async
+                data-ad-client="ca-pub-8588820008944775"
+                data-admob-interstitial-slot="ca-app-pub-3940256099942544/1033173712"
+                data-admob-rewarded-slot="ca-app-pub-3940256099942544/5224354917"
+                data-ad-frequency-hint="30s"
+                data-page-url="arrowsamples.com"
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js">
+        </script>
+
+        <script>window.adsbygoogle = window.adsbygoogle || [];
+            const adBreak = adConfig = function (o) {
+            adsbygoogle.push(o);
+            }
+        </script>  
+
+        <script
+            async
+            src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+            crossorigin="anonymous"
+        ></script>
+
         <style>
             /* Reset CSS: Please avoid making changes here unless you know what you're doing :) */
             *,
@@ -45,5 +67,62 @@
         <div id="game-container"></div>
         <script src="./phaser.js"></script>
         <script type="module" src="./src/main.js"></script>
+        
+        <script>
+        window.googletag = window.googletag || { cmd: [] };
+
+        let anchorSlot;
+
+        googletag.cmd.push(() => {
+            // Define an anchor ad slot at the top of the viewport.
+            // Note: a single anchor ad slot may be defined per page, at either the
+            // top or bottom of the viewport.
+            //
+            // Be aware that anchor ads are not limited to mobile devices. If you
+            // serve the same code to both mobile and non-mobile users, it is
+            // recommended to explicitly define when and where anchor ads should be
+            // shown for each environment. Here we use a basic check of viewport
+            // width to create a top anchor on mobile and a bottom anchor on
+            // non-mobile devices.
+            anchorSlot = googletag.defineOutOfPageSlot(
+            "/6355419/Travel",
+            document.body.clientWidth <= 500
+                ? googletag.enums.OutOfPageFormat.TOP_ANCHOR
+                : googletag.enums.OutOfPageFormat.BOTTOM_ANCHOR,
+            );
+
+            // Anchor slots return null if the page or device does not support anchors.
+            if (anchorSlot) {
+            anchorSlot.addService(googletag.pubads()).setConfig({
+                targeting: {
+                test: "anchor",
+                },
+            });
+
+            }
+
+            // Define static ad slots.
+            googletag
+            .defineSlot("/6355419/Travel/Europe", [100, 100], "static-ad-1")
+            .addService(googletag.pubads());
+
+            // Enable SRA.
+            googletag.setConfig({
+            singleRequest: true,
+            });
+
+            // Enable services.
+            googletag.enableServices();
+        });
+        </script>
+
+        <script>
+        googletag.cmd.push(() => {
+            // Ensure the first call to display comes after static ad slot
+            // divs are defined. If you do not have any static ad slots, this
+            // call can be made immediately after services are enabled.
+            googletag.display(anchorSlot);
+        });
+        </script>             
     </body>
     </html>
