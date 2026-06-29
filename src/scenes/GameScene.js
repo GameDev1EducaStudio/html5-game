@@ -7,6 +7,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     preload() {
+        adConfig({sound: 'on', preloadAdBreaks: 'on'});
+
         this.load.image('bgGame', 'assets/bgGame.png');
         this.load.image('mainContainer', 'assets/mainContainer.png');
         this.load.image('box', 'assets/box.png');
@@ -88,6 +90,8 @@ export class GameScene extends Phaser.Scene {
         const h = this.scale.height;
         const cx = w / 2;
         const cy = h / 2;
+
+        this.shouldReveal = false;
 
         // Launch UIScene jika belum aktif
         if (!this.scene.get('UIScene').scene.isActive()) {
@@ -552,12 +556,54 @@ export class GameScene extends Phaser.Scene {
 
     handleBackNavigation() {
         if (this.gameTimer) this.gameTimer.remove();
-        if (this.mode === 'level') {
-            if (!this.isGameDone) this.reduceLife();
-            this.scene.start('LevelSelectScene', { autoOpenLevel: null });
-        } else {
-            this.scene.start('PracticeScene');
-        }
+
+        adBreak({
+            type: 'browse',
+            name: 'level_select',
+
+            beforeAd: () => {
+                console.log("beforeAd");
+            },
+
+            afterAd: () => {
+                console.log("afterAd");
+            },
+
+            adBreakDone: (info) => {
+
+                console.log(info);
+
+                switch (info.breakStatus) {
+
+                    case "viewed":
+                        console.log("Iklan ditonton");
+                        break;
+
+                    case "dismissed":
+                        console.log("Iklan ditutup");
+                        break;
+
+                    case "noAdPreloaded":
+                        console.log("Belum ada iklan");
+                        break;
+
+                    case "frequencyCapped":
+                        console.log("Kena frequency cap");
+                        break;
+
+                    case "notReady":
+                        console.log("Belum ready");
+                        break;
+                }
+
+                if (this.mode === 'level') {
+                    if (!this.isGameDone) this.reduceLife();
+                    this.scene.start('LevelSelectScene', { autoOpenLevel: null });
+                } else {
+                    this.scene.start('PracticeScene');
+                }                
+            }
+        });
     }
 
     createButton(x, y, text, onClick) {
@@ -802,7 +848,42 @@ export class GameScene extends Phaser.Scene {
 
             this.showConfirmPopup(msg, cx, cy, w, h, () => { this.checkAnswers(); });
         } else if (btnText === 'Reveal') {
-            this.revealAllAnswer();
+
+            adBreak({
+            type: 'reward',
+            name: 'reveal_all_answer',
+            beforeAd: () => {
+
+            },
+            afterAd: () => {
+                if (this.shouldReveal) {
+                    this.revealAllAnswer();
+                }
+
+                this.shouldReveal = false;
+            },
+            beforeReward: (showAdFn) => {
+                const r = confirm('Tonton iklan untuk membuka semua jawaban?');
+                if (r) {
+                showAdFn();
+                } else {
+                alert('Kamu perlu menonton iklan untuk membuka semua jawaban!');
+                this.shouldReveal = true;
+                }
+            },
+            adDismissed: () => {
+                this.shouldReveal = true;
+            },
+            adViewed: () => {
+                /*
+                * This is normally the place where a reward is given, but
+                * in this specific instance, action is done in "adDismissed".
+                */
+            }
+            });
+
+            //this.revealAllAnswer();
+
         } else if (btnText === 'Finish') {
             this.isResultProcessing = true;
             this.setButtonLock(this.btnDoneContainer, true);
@@ -987,8 +1068,50 @@ export class GameScene extends Phaser.Scene {
             btnAction.setTexture('btnSmall');
             this.stopResultBGM();
             if (stars > 0) {
-                const nextLevelNum = parseInt(this.levelId.split('_')[1]) + 1;
-                this.scene.start('LevelSelectScene', { autoOpenLevel: `level_${nextLevelNum}` });
+
+                adBreak({
+                    type: 'next',
+                    name: 'next_level',
+
+                    beforeAd: () => {
+                        console.log("beforeAd");
+                    },
+
+                    afterAd: () => {
+                        console.log("afterAd");
+                    },
+
+                    adBreakDone: (info) => {
+
+                        console.log(info);
+
+                        switch (info.breakStatus) {
+
+                            case "viewed":
+                                console.log("Iklan ditonton");
+                                break;
+
+                            case "dismissed":
+                                console.log("Iklan ditutup");
+                                break;
+
+                            case "noAdPreloaded":
+                                console.log("Belum ada iklan");
+                                break;
+
+                            case "frequencyCapped":
+                                console.log("Kena frequency cap");
+                                break;
+
+                            case "notReady":
+                                console.log("Belum ready");
+                                break;
+                        }
+
+                        const nextLevelNum = parseInt(this.levelId.split('_')[1]) + 1;
+                        this.scene.start('LevelSelectScene', { autoOpenLevel: `level_${nextLevelNum}` });             
+                    }
+                });
             } else {
                 this.scene.restart(this.initialData);
             }

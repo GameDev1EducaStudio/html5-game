@@ -3,10 +3,12 @@ import { w, h, cx, cy, setGameSize, playSFX } from './Utils/global.js';
 export class Play extends Phaser.Scene {
 
     constructor() {
-        super('Play');
+        super('Play');     
     }
 
     preload() {
+        adConfig({sound: 'on', preloadAdBreaks: 'on'});
+
         this.load.image('logo', 'assets/logo.png');
         this.load.image('bgStart', 'assets/bgStart.png');
         this.load.image('panelLevelSelect', 'assets/panelLevelSelect.png');
@@ -156,7 +158,7 @@ export class Play extends Phaser.Scene {
      
         const btnY = currentH / 2 + 250;
 
-        const btnHelp = createButton(currentW / 2 - 200, btnY, 'btnHelp', () => {
+        this.btnHelp = createButton(currentW / 2 - 200, btnY, 'btnHelp', () => {
             this.dimmer.setVisible(true);
             this.helpContainer.setVisible(true).setScale(0);
             this.tweens.add({
@@ -164,14 +166,23 @@ export class Play extends Phaser.Scene {
             });
         });
 
-        const btnPlay = createButton(currentW / 2, btnY, 'btnPlay', () => {
+        this.btnPlay = createButton(currentW / 2, btnY, 'btnPlay', () => {
             this.cameras.main.fadeOut(600, 0, 0, 0);
             this.cameras.main.once('camerafadeoutcomplete', () => {
-                this.scene.start('Menu');
+                // adBreak({
+                // type: 'browse',
+                // name: 'open_menu',
+                // beforeAd: () => {
+                //     this.disableButtons();
+                // },
+                // afterAd: () => {
+                     this.scene.start('Menu'); 
+                // },
+                // });
             });
         });
 
-        const btnShop = createButton(currentW / 2 + 200, btnY, 'btnShop', () => {
+        this.btnShop = createButton(currentW / 2 + 200, btnY, 'btnShop', () => {
             this.shopDimmer.setVisible(true);
             this.shopContainer.setVisible(true).setScale(0);
             this.tweens.add({
@@ -179,7 +190,7 @@ export class Play extends Phaser.Scene {
             });
         }); 
         
-        const uiElements = [btnShop, btnPlay, btnHelp];
+        const uiElements = [this.btnShop, this.btnPlay, this.btnHelp];
 
         // Animasi pop-in untuk deretan menu tombol bawah
         this.tweens.add({
@@ -199,6 +210,24 @@ export class Play extends Phaser.Scene {
                     ease: 'Sine.easeInOut'
                 });
             }
+        });
+    }
+
+    disableButtons() {
+        const buttons = [
+            this.btnHelp,
+            this.btnPlay,
+            this.btnShop
+        ];
+
+        buttons.forEach(btn => {
+
+            if (!btn) return;
+
+            btn.disableInteractive();
+
+            btn.setAlpha(0.5);
+
         });
     }
 

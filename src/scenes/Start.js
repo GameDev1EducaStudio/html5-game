@@ -1,5 +1,3 @@
-// import { w, h, cx, cy, setGameSize, playSFX } from './Utils/global.js';
-
 export class Start extends Phaser.Scene {
 
     constructor() {
@@ -8,8 +6,9 @@ export class Start extends Phaser.Scene {
 
     preload() { 
         this.load.image('logo', 'assets/logo.png');
-        
         this.load.audio('sfx_intro', 'assets/Audio/bgm.mp3');
+
+        adConfig({sound: 'on', preloadAdBreaks: 'on'});
     }
 
     create() {
@@ -30,7 +29,14 @@ export class Start extends Phaser.Scene {
                         alpha: 0,
                         duration: 1000,
                         onComplete: () => { 
-                            this.scene.start('Play'); 
+                            adBreak({
+                            type: 'preroll',
+                            name: 'splash_gamelab',
+                            adBreakDone: (info) => {
+                                console.log(`Preroll result: ${info.breakStatus}`);
+                                this.scene.start('Play'); 
+                            }
+                            });    
                         }
                     });
                 });

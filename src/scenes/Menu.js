@@ -70,7 +70,7 @@ export class Menu extends Phaser.Scene {
         btnBack.on('pointerdown', () => { btnBack.setTexture('btnLeftClick'); playSFX(this, 'sndClick'); });
         btnBack.on('pointerup', () => {
             btnBack.setTexture('btnLeft');
-            this.scene.start('Start');
+            this.scene.start('Play');
         });
         
         // Struktur Menu Kiri: LATIHAN
