@@ -856,11 +856,7 @@ export class GameScene extends Phaser.Scene {
 
             },
             afterAd: () => {
-                if (this.shouldReveal) {
-                    this.revealAllAnswer();
-                }
 
-                this.shouldReveal = false;
             },
             beforeReward: (showAdFn) => {
                 const r = confirm('Tonton iklan untuk membuka semua jawaban?');
@@ -868,18 +864,49 @@ export class GameScene extends Phaser.Scene {
                 showAdFn();
                 } else {
                 alert('Kamu perlu menonton iklan untuk membuka semua jawaban!');
-                this.shouldReveal = true;
                 }
             },
             adDismissed: () => {
-                this.shouldReveal = true;
+
             },
             adViewed: () => {
                 /*
                 * This is normally the place where a reward is given, but
                 * in this specific instance, action is done in "adDismissed".
                 */
-            }
+            },
+            adBreakDone: (info) => {
+
+                console.log(info);
+
+                switch (info.breakStatus) {
+
+                    case "viewed":
+                        console.log("Iklan ditonton");
+                         this.revealAllAnswer();
+                        break;
+
+                    case "dismissed":
+                        console.log("Iklan ditutup");
+                        alert('Kamu perlu menonton iklan untuk membuka semua jawaban!');
+                        break;
+
+                    case "noAdPreloaded":
+                        console.log("Belum ada iklan");
+                        alert('Iklan sedang dimuat, coba beberapa saat kembali');
+                        break;
+
+                    case "frequencyCapped":
+                        console.log("Kena frequency cap");
+                        alert('Melebihi batas percobaan, coba beberapa saat kembali');
+                        break;
+
+                    case "notReady":
+                        console.log("Belum ready");
+                        alert('Iklan sedang dimuat, coba beberapa saat kembali');
+                        break;
+                }               
+            }            
             });
 
             //this.revealAllAnswer();
