@@ -29,14 +29,14 @@ export class Start extends Phaser.Scene {
                         alpha: 0,
                         duration: 1000,
                         onComplete: () => { 
-                            adBreak({
-                            type: 'preroll',
-                            name: 'splash_gamelab',
-                            adBreakDone: (info) => {
-                                console.log(`Preroll result: ${info.breakStatus}`);
+                            // adBreak({
+                            // type: 'preroll',
+                            // name: 'splash_gamelab',
+                            // adBreakDone: (info) => {
+                            //     console.log(`Preroll result: ${info.breakStatus}`);
                                 this.scene.start('Play'); 
-                            }
-                            });    
+                            // }
+                            // });    
                         }
                     });
                 });

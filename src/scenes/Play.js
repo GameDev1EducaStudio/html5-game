@@ -158,7 +158,7 @@ export class Play extends Phaser.Scene {
      
         const btnY = currentH / 2 + 250;
 
-        this.btnHelp = createButton(currentW / 2 - 200, btnY, 'btnHelp', () => {
+        this.btnHelp = createButton(currentW / 2 - 100, btnY, 'btnHelp', () => {
             this.dimmer.setVisible(true);
             this.helpContainer.setVisible(true).setScale(0);
             this.tweens.add({
@@ -166,7 +166,7 @@ export class Play extends Phaser.Scene {
             });
         });
 
-        this.btnPlay = createButton(currentW / 2, btnY, 'btnPlay', () => {
+        this.btnPlay = createButton(currentW / 2 + 100, btnY, 'btnPlay', () => {
             this.cameras.main.fadeOut(600, 0, 0, 0);
             this.cameras.main.once('camerafadeoutcomplete', () => {
                 // adBreak({
@@ -182,15 +182,15 @@ export class Play extends Phaser.Scene {
             });
         });
 
-        this.btnShop = createButton(currentW / 2 + 200, btnY, 'btnShop', () => {
-            this.shopDimmer.setVisible(true);
-            this.shopContainer.setVisible(true).setScale(0);
-            this.tweens.add({
-                targets: this.shopContainer, scale: 1, duration: 300, ease: 'Back.out'
-            });
-        }); 
+        // this.btnShop = createButton(currentW / 2 + 200, btnY, 'btnShop', () => {
+        //     this.shopDimmer.setVisible(true);
+        //     this.shopContainer.setVisible(true).setScale(0);
+        //     this.tweens.add({
+        //         targets: this.shopContainer, scale: 1, duration: 300, ease: 'Back.out'
+        //     });
+        // }); 
         
-        const uiElements = [this.btnShop, this.btnPlay, this.btnHelp];
+        const uiElements = [this.btnPlay, this.btnHelp];
 
         // Animasi pop-in untuk deretan menu tombol bawah
         this.tweens.add({
@@ -216,8 +216,7 @@ export class Play extends Phaser.Scene {
     disableButtons() {
         const buttons = [
             this.btnHelp,
-            this.btnPlay,
-            this.btnShop
+            this.btnPlay
         ];
 
         buttons.forEach(btn => {
